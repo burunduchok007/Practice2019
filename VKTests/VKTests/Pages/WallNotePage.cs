@@ -2,23 +2,47 @@
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
 
 namespace VKTests
 {
-    internal class WallNotePage: BasePage
+    internal class WallNotePage: BasePage, ILike
     {
-        internal WallNotePage(IWebDriver driver) : base(driver) { }
+        internal WallNotePage(IWebDriver driver) : base(driver) { }       
         
-        internal bool IsVisible => Driver.FindElement(By.XPath("//*[@id='wall_search']")).Displayed;
-
         private IWebElement CountWallNotes => Driver.FindElement(By.XPath("//*[@id='fw_summary']"));
 
-        internal void LikeWallNotes()
+        public void EnterPage(PersonPage personPage)
         {
-            int countIntWallNotes = Convert.ToInt32(CountWallNotes.Text);
+            personPage.EnterWallNotePage();
+        }
+
+        public void GoToURL(PersonPage personPage)
+        {
+            personPage.GoToURL(personPage.UrlString);
+        }
+
+        public bool IsVisible()
+        {
+            if (Driver.FindElement(By.XPath("//*[@id='wall_search']")).Displayed == true)
+            {
+                return true;
+            }
+            else return false;
+        }
+        
+        public void Wait()
+        {
+            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
+            wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@id='wall_search']")));
+        }
+
+        public void Like(int likeCount)
+        {
+            //int countIntWallNotes = Convert.ToInt32(CountWallNotes.Text);
             Actions actions = new Actions(Driver);
             
-            for (int i =0; i<countIntWallNotes; i++)
+            for (int i =0; i<likeCount; i++)
             {
                 var likeButtons = Driver.FindElements(By.XPath("//*[@class='_post_content']/div[2]/div/div[2]/div/div[1]/a[1]/div[1]"));
                                

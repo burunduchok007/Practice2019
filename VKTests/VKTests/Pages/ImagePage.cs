@@ -7,11 +7,9 @@ using OpenQA.Selenium.Support.UI;
 
 namespace VKTests
 {
-    internal class ImagePage: BasePage
+    internal class ImagePage: BasePage, ILike
     {
-        internal ImagePage(IWebDriver driver):base(driver) { }
-
-        internal bool IsVisible => Driver.FindElement(By.Id("side_bar_inner")).Displayed;
+        internal ImagePage(IWebDriver driver):base(driver) { }                
 
         private IWebElement LikeButton => Driver.FindElement(By.XPath("//*[@class='like_button_icon']"));
 
@@ -20,24 +18,46 @@ namespace VKTests
         private IWebElement CountLikesPannel => Driver.FindElement(By.XPath("//*[@id='pv_narrow']/div[1]/div[1]/div/div/div[1]/div[3]/div/div[1]/a[1]/div[3]"));
 
         private IWebElement CountImagePannel => Driver.FindElement(By.XPath("//*[@class='pv_counter']"));
-
-        
-
+               
         private IWebElement ImagePannel => Driver.FindElement(By.Id("layer"));
 
-        internal void LikePhotos()
+        public void GoToURL(PersonPage personPage)
         {
-            
+            personPage.GoToURL(personPage.UrlString);
+        }
+
+        public bool IsVisible()
+        {
+            if (Driver.FindElement(By.Id("side_bar_inner")).Displayed == true)
+            {
+                return true;
+            }
+            else return false;
+        }
+        
+        public void EnterPage(PersonPage personPage)
+        {
+            personPage.EnterImagePage();
+        }
+
+        public void Wait()
+        {
+            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
+            wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@id='pv_photo']/img")));
+        } 
+
+        public void Like(int likeCount)
+        {            
             WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
             wait.Until(ExpectedConditions.ElementIsVisible(By.Id("layer")));
 
             Assert.IsTrue(ImagePannel.Displayed);
                       
             var countImage = CountImagePannel.Text.Split();
-            int totalCountImage = Convert.ToInt32(countImage[2]);
+            //int totalCountImage = Convert.ToInt32(countImage[2]);
             int currentCountImage = Convert.ToInt32(countImage[0]);
 
-            while (currentCountImage == totalCountImage)
+            while (currentCountImage < likeCount)
             {
                 var countLikesBefore = CountLikesPannel.Text.Split();
                 int totalCountLikesBefore = Convert.ToInt32(countLikesBefore[0]);
@@ -64,6 +84,8 @@ namespace VKTests
                 countImage = CountImagePannel.Text.Split();
                 currentCountImage = Convert.ToInt32(countImage[0]);
             }
+
+            
                                                             
         }
 

@@ -2,20 +2,44 @@
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
 
 namespace VKTests
 {
-    internal class VideoPage: BasePage
+    internal class VideoPage: BasePage, ILike
     {
         internal VideoPage(IWebDriver driver) : base(driver) { }
-
-        internal bool IsVisible => Driver.FindElement(By.Id("video_content_all")).Displayed;
-
+               
         private IWebElement CountVideoPannel => Driver.FindElement(By.XPath("//*[@class='like_button_count']"));
 
         private IWebElement ScrollBar => Driver.FindElement(By.XPath("//*[@class='mv_pl_scrollbar_inner scrollbar_inner']"));
-                
-        internal void LikeVideo()
+
+        public void EnterPage(PersonPage personPage)
+        {
+            personPage.EnterVideoPage();
+        }
+
+        public void GoToURL(PersonPage personPage)
+        {
+            personPage.GoToURL(personPage.UrlString);
+        }
+
+        public bool IsVisible()
+        {
+            if (Driver.FindElement(By.Id("video_content_all")).Displayed == true)
+            {
+                return true;
+            }
+            else return false;
+        } 
+
+        public void Wait()
+        {
+            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
+            wait.Until(ExpectedConditions.ElementIsVisible(By.Id("video_content_all")));
+        }
+
+        public void Like(int likeCount)
         {
             var videos = Driver.FindElements(By.XPath("//*[@class='video_item_title'] "));
             videos[0].Click();
@@ -24,7 +48,7 @@ namespace VKTests
             // var actions = new Actions(Driver);
             
 
-            for(int i = 1; i<videos.Count; i++)
+            for(int i = 1; i<likeCount; i++)
             {
                 var likeButton = Driver.FindElements(By.XPath("//*[@class='like_button_icon'] "));
 

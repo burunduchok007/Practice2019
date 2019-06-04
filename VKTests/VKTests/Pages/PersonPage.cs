@@ -22,20 +22,21 @@ namespace VKTests
 
         private IWebElement PassLog => Driver.FindElement(By.Id("quick_pass"));
 
-        private IWebElement LoigButtom => Driver.FindElement(By.Id("quick_login_button"));
+        private IWebElement LoginButtom => Driver.FindElement(By.Id("quick_login_button"));
 
         private IWebElement PageImage => Driver.FindElement(By.XPath("//*[@class='page_square_photo crisp_image']"));
 
         private IWebElement WallNote => Driver.FindElement(By.XPath("//*[@id='wall_tabs']/li[2]/a"));
         
-        internal void GoTo(string url)
+        internal void GoToURL(string url)
         {
             Driver.Navigate().GoToUrl(url);
+            Driver.Manage().Window.Maximize();
             Assert.IsTrue(IsVisible(), $"Source page was not visible. Expected=>{PageTitle}." +
                 $"Actual=>{Driver.Title}");
         }
 
-        internal bool IsVisible() => Driver.FindElement(By.Id("quick_login_button")).Displayed;
+        internal bool IsVisible() => Driver.FindElement(By.XPath("//*[@id='page_info_wrap']/div[1]/h2")).Displayed;
 
         internal void FillInformationAndSubmitLogin(string login, string password)
         {
@@ -43,7 +44,7 @@ namespace VKTests
             EmailLog.SendKeys(login);
             PassLog.Clear();
             PassLog.SendKeys(password);
-            LoigButtom.Click();
+            LoginButtom.Click();
             
         }
 
