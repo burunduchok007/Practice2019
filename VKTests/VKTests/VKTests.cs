@@ -81,11 +81,17 @@ namespace VKTests
             }
 
         }
-         private void Refresh(BasePage basePage)
+
+        static void OpenPage<T>(T Page) where T: ILike
         {
+           
+        }
+
+         private void Refresh(BasePage basePage)
+         {
             Driver.Navigate().Refresh();
 
-        }
+         }
         private PersonPage Login(WebDriverWait wait)
         {
             PersonPage personPage = new PersonPage(Driver);

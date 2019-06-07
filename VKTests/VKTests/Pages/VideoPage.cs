@@ -6,8 +6,10 @@ using OpenQA.Selenium.Support.UI;
 
 namespace VKTests
 {
-    internal class VideoPage: BasePage, ILike
+    internal class VideoPage: BasePage, ILike, IPrintContent<int>
     {
+        public int CountElements { get; set; }
+
         internal VideoPage(IWebDriver driver) : base(driver) { }
                
         private IWebElement CountVideoPannel => Driver.FindElement(By.XPath("//*[@class='like_button_count']"));

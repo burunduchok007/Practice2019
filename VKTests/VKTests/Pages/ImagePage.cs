@@ -7,8 +7,10 @@ using OpenQA.Selenium.Support.UI;
 
 namespace VKTests
 {
-    internal class ImagePage: BasePage, ILike
+    internal class ImagePage : BasePage, ILike, IPrintContent<int>
     {
+        public int CountElements {get;set;}
+        
         internal ImagePage(IWebDriver driver):base(driver) { }                
 
         private IWebElement LikeButton => Driver.FindElement(By.XPath("//*[@class='like_button_icon']"));
@@ -84,11 +86,13 @@ namespace VKTests
                 countImage = CountImagePannel.Text.Split();
                 currentCountImage = Convert.ToInt32(countImage[0]);
             }
-
-            
+                        
                                                             
         }
 
+        public 
+        
+        
 
     }
 }

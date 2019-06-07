@@ -6,8 +6,10 @@ using OpenQA.Selenium.Support.UI;
 
 namespace VKTests
 {
-    internal class WallNotePage: BasePage, ILike
+    internal class WallNotePage: BasePage, ILike, IPrintContent<string>
     {
+        public string CountElements { get; set; }
+
         internal WallNotePage(IWebDriver driver) : base(driver) { }       
         
         private IWebElement CountWallNotes => Driver.FindElement(By.XPath("//*[@id='fw_summary']"));
