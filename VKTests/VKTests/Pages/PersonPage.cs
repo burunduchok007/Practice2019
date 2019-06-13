@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
 using System;
 
 namespace VKTests
@@ -10,11 +11,11 @@ namespace VKTests
         internal PersonPage(IWebDriver driver): base(driver) {}
 
         private string _login;
-        public string Login { get { return _login; } set { _login = value; } }
+        public string Login { get; set; }
         private string _password;
-        public string Password { get { return _password; } set { _password = value; } }
+        public string Password { get; set; }
         private string _urlString;
-        public string UrlString { get { return _urlString; } set { _urlString = value; } }
+        public string UrlString { get; set; }
 
         private string PageTitle => "Михаил Землянухин | ВКонтакте";
 
@@ -27,16 +28,42 @@ namespace VKTests
         private IWebElement PageImage => Driver.FindElement(By.XPath("//*[@class='page_square_photo crisp_image']"));
 
         private IWebElement WallNote => Driver.FindElement(By.XPath("//*[@id='wall_tabs']/li[2]/a"));
-        
-        internal void GoToURL(string url)
+
+        public PersonPage LoginAction()
         {
-            Driver.Navigate().GoToUrl(url);
-            Driver.Manage().Window.Maximize();
-            Assert.IsTrue(IsVisible(), $"Source page was not visible. Expected=>{PageTitle}." +
-                $"Actual=>{Driver.Title}");
+            PersonPage personPage = new PersonPage(Driver);
+            Login = "z.t.1997@rambler.ru";
+            Password = "TB1tsR8c15aS";
+            UrlString = "https://vk.com/id136721861";
+            GoToURL <PersonPage> (personPage, UrlString, PageTitle);
+            FillInformationAndSubmitLogin(Login, Password);
+            return personPage;
         }
 
-        internal bool IsVisible() => Driver.FindElement(By.XPath("//*[@id='page_info_wrap']/div[1]/h2")).Displayed;
+        //internal PersonPage GoToURL(string url)
+        //{
+        //    PersonPage personPage = new PersonPage(Driver);
+        //    Driver.Navigate().GoToUrl(url);
+        //    Driver.Manage().Window.Maximize();
+        //    Assert.IsTrue(IsVisible(), $"Source page was not visible. Expected=>{PageTitle}." +
+        //        $"Actual=>{Driver.Title}");
+        //    return personPage;
+        //}
+
+        public override bool IsVisible()
+        {
+            if (Driver.FindElement(By.XPath("//*[@id='quick_login']")).Displayed == true)
+            {
+                return true;
+            }
+            else return false;
+        }
+
+        public override void Wait()
+        {
+            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
+            wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@id='top_profile_link']")));
+        }
 
         internal void FillInformationAndSubmitLogin(string login, string password)
         {

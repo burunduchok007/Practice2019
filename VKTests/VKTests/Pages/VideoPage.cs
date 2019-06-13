@@ -6,7 +6,7 @@ using OpenQA.Selenium.Support.UI;
 
 namespace VKTests
 {
-    internal class VideoPage: BasePage, ILike, IPrintContent<int>
+    internal class VideoPage: BasePage, IClickableLike, IPrintContent<int>
     {
         public int CountElements { get; set; }
 
@@ -16,17 +16,8 @@ namespace VKTests
 
         private IWebElement ScrollBar => Driver.FindElement(By.XPath("//*[@class='mv_pl_scrollbar_inner scrollbar_inner']"));
 
-        public void EnterPage(PersonPage personPage)
-        {
-            personPage.EnterVideoPage();
-        }
-
-        public void GoToURL(PersonPage personPage)
-        {
-            personPage.GoToURL(personPage.UrlString);
-        }
-
-        public bool IsVisible()
+               
+        public override bool IsVisible()
         {
             if (Driver.FindElement(By.Id("video_content_all")).Displayed == true)
             {
@@ -35,13 +26,14 @@ namespace VKTests
             else return false;
         } 
 
-        public void Wait()
+        public override void Wait()
         {
             WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
             wait.Until(ExpectedConditions.ElementIsVisible(By.Id("video_content_all")));
         }
 
-        public void Like(int likeCount)
+        public delegate void Like(int likeCount, )
+        public void ClickLike(int likeCount)
         {
             var videos = Driver.FindElements(By.XPath("//*[@class='video_item_title'] "));
             videos[0].Click();

@@ -15,26 +15,26 @@ namespace VKTests
         [TestMethod]
         public void LikeImage()
         {
-            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
-            PersonPage personPage = Login(wait);
-
+            PersonPage personPage = new PersonPage(Driver);
+            personPage.LoginAction();
+            personPage.Wait();
             ImagePage imagePage = personPage.EnterImagePage();
-            wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@id='pv_photo']/img")));
+            imagePage.Wait();
             Assert.IsTrue(imagePage.IsVisible());
-            imagePage.Like(15);
+            imagePage.ClickLike(15);
 
         }
 
         [TestMethod]
         public void LikeVideo()
         {
-            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
-            PersonPage personPage = Login(wait);
-
+            PersonPage personPage = new PersonPage(Driver);
+            personPage.LoginAction();
+            personPage.Wait();
             VideoPage videoPage = personPage.EnterVideoPage();
-            wait.Until(ExpectedConditions.ElementIsVisible(By.Id("video_content_all")));
+            videoPage.Wait();
             Assert.IsTrue(videoPage.IsVisible());
-            videoPage.Like(15);
+            videoPage.ClickLike(15);
 
             Refresh(personPage);
             Refresh(videoPage);
@@ -45,44 +45,44 @@ namespace VKTests
         [TestMethod]
         public void LikeWallNote()
         {
-            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
-            PersonPage personPage = Login(wait);
-
+            PersonPage personPage = new PersonPage(Driver);
+            personPage.LoginAction();
+            personPage.Wait();
             WallNotePage wallNotePage = personPage.EnterWallNotePage();
-            wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@id='wall_search']")));
+            wallNotePage.Wait();
             Assert.IsTrue(wallNotePage.IsVisible());
-            wallNotePage.Like(15);
+            wallNotePage.ClickLike(15);
         }
 
-        [TestMethod]
-        public void LikeEverythingWithILike()
-        {
-            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
-            PersonPage personPage = Login(wait);
+        //[TestMethod]
+        //public void LikeEverythingWithILike()
+        //{
+        //    WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
+        //    PersonPage personPage = Login(wait);
 
-            List<ILike> listPage = new List<ILike>();
+        //    List<IClickableLike> listPage = new List<IClickableLike>();
 
-            ILike imagePage = personPage.EnterImagePage();
-            listPage.Add(imagePage);
-            personPage.GoToURL(personPage.UrlString);
-            ILike videoPage = personPage.EnterVideoPage();
-            listPage.Add(videoPage);
-            personPage.GoToURL(personPage.UrlString);
-            ILike wallNotePage = personPage.EnterWallNotePage();
-            listPage.Add(wallNotePage);
+        //    IClickableLike imagePage = personPage.EnterImagePage();
+        //    listPage.Add(imagePage);
+        //    personPage.GoToURL(personPage.UrlString);
+        //    IClickableLike videoPage = personPage.EnterVideoPage();
+        //    listPage.Add(videoPage);
+        //    personPage.GoToURL(personPage.UrlString);
+        //    IClickableLike wallNotePage = personPage.EnterWallNotePage();
+        //    listPage.Add(wallNotePage);
             
-            foreach(ILike c in listPage)
-            {
-                c.GoToURL(personPage);
-                c.EnterPage(personPage);
-                c.Wait();
-                Assert.IsTrue(c.IsVisible());
-                c.Like(5);
-            }
+        //    foreach(IClickableLike c in listPage)
+        //    {
+        //        c.GoToURL(personPage);
+        //        c.EnterPage(personPage);
+        //        c.Wait();
+        //        Assert.IsTrue(c.IsVisible());
+        //        c.ClickLike(5);
+        //    }
 
-        }
+        //}
 
-        static void OpenPage<T>(T Page) where T: ILike
+        static void OpenPage<T>(T Page) where T: IClickableLike
         {
            
         }
@@ -92,17 +92,7 @@ namespace VKTests
             Driver.Navigate().Refresh();
 
          }
-        private PersonPage Login(WebDriverWait wait)
-        {
-            PersonPage personPage = new PersonPage(Driver);
-            personPage.Login = "";
-            personPage.Password = "";
-            personPage.UrlString = "https://vk.com/id136721861";
-            personPage.GoToURL(personPage.UrlString);
-            personPage.FillInformationAndSubmitLogin(personPage.Login, personPage.Password);
-            wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@id='l_pr']/a/span/span[3]")));
-            return personPage;
-        }
+        
 
         [TestInitialize]
         public void SetupForEverySingleTestMethod()

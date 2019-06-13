@@ -7,7 +7,7 @@ using OpenQA.Selenium.Support.UI;
 
 namespace VKTests
 {
-    internal class ImagePage : BasePage, ILike, IPrintContent<int>
+    internal class ImagePage : BasePage, IClickableLike, IPrintContent<int>
     {
         public int CountElements {get;set;}
         
@@ -23,12 +23,8 @@ namespace VKTests
                
         private IWebElement ImagePannel => Driver.FindElement(By.Id("layer"));
 
-        public void GoToURL(PersonPage personPage)
-        {
-            personPage.GoToURL(personPage.UrlString);
-        }
-
-        public bool IsVisible()
+        
+        public override bool IsVisible()
         {
             if (Driver.FindElement(By.Id("side_bar_inner")).Displayed == true)
             {
@@ -36,19 +32,15 @@ namespace VKTests
             }
             else return false;
         }
-        
-        public void EnterPage(PersonPage personPage)
-        {
-            personPage.EnterImagePage();
-        }
+                
 
-        public void Wait()
+        public override void Wait()
         {
             WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
             wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@id='pv_photo']/img")));
         } 
 
-        public void Like(int likeCount)
+        public void ClickLike(int likeCount)
         {            
             WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
             wait.Until(ExpectedConditions.ElementIsVisible(By.Id("layer")));
@@ -90,9 +82,7 @@ namespace VKTests
                                                             
         }
 
-        public 
-        
-        
+               
 
     }
 }

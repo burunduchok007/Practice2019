@@ -6,7 +6,7 @@ using OpenQA.Selenium.Support.UI;
 
 namespace VKTests
 {
-    internal class WallNotePage: BasePage, ILike, IPrintContent<string>
+    internal class WallNotePage: BasePage, IClickableLike, IPrintContent<string>
     {
         public string CountElements { get; set; }
 
@@ -14,17 +14,7 @@ namespace VKTests
         
         private IWebElement CountWallNotes => Driver.FindElement(By.XPath("//*[@id='fw_summary']"));
 
-        public void EnterPage(PersonPage personPage)
-        {
-            personPage.EnterWallNotePage();
-        }
-
-        public void GoToURL(PersonPage personPage)
-        {
-            personPage.GoToURL(personPage.UrlString);
-        }
-
-        public bool IsVisible()
+        public override bool IsVisible()
         {
             if (Driver.FindElement(By.XPath("//*[@id='wall_search']")).Displayed == true)
             {
@@ -33,13 +23,13 @@ namespace VKTests
             else return false;
         }
         
-        public void Wait()
+        public override void Wait()
         {
             WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
             wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@id='wall_search']")));
         }
 
-        public void Like(int likeCount)
+        public void ClickLike(int likeCount)
         {
             //int countIntWallNotes = Convert.ToInt32(CountWallNotes.Text);
             Actions actions = new Actions(Driver);
