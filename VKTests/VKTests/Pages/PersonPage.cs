@@ -32,8 +32,8 @@ namespace VKTests
         public PersonPage LoginAction()
         {
             PersonPage personPage = new PersonPage(Driver);
-            Login = "z.t.1997@rambler.ru";
-            Password = "TB1tsR8c15aS";
+            Login = "";
+            Password = "";
             UrlString = "https://vk.com/id136721861";
             GoToURL <PersonPage> (personPage, UrlString, PageTitle);
             FillInformationAndSubmitLogin(Login, Password);
